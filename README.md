@@ -27,13 +27,13 @@
 
 ## Lexicon Based Sentiment Scores
 
-**AFINN**  <br /> The AFINN lexicon is a list of English terms manually rated for valence with an integer between `-5 (negative)` and `+5 (positive)` by Finn Årup Nielsen between 2009 and 2011. [:link:](https://github.com/fnielsen/afinn) <br />
+[**AFINN**](https://github.com/fnielsen/afinn)  <br /> The AFINN lexicon is a list of English terms manually rated for valence with an integer between `-5 (negative)` and `+5 (positive)` by Finn Årup Nielsen between 2009 and 2011.<br />
 
-**NRC**    <br /> The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and `two sentiments` (negative and positive). The annotations were manually done by crowdsourcing. [:link:](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)<br />
+[**NRC**](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)    <br /> The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and `two sentiments` (negative and positive). The annotations were manually done by crowdsourcing.<br />
 
-**Bing**   <br /> A list of English `positive` and `negative` opinion words or sentiment words (around 6800 words). [:link:](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html) <br />
+[**Bing**](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html)   <br /> A list of English `positive` and `negative` opinion words or sentiment words (around 6800 words). <br />
 
-**LIWC**  <br /> Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness`.  [:link:](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf) <br />
+[**LIWC**](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf)  <br /> Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness`. <br />
 
 
 ## Acknowledge 
