@@ -1,10 +1,11 @@
 # Visualization and Parspeech Sentiment Using Various Type of Dictionary Based Sentiment Analysis 
 
+
 <p align="center">
   <img width="240" height= "120" src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/hoc_NRC.gif">
   <img width="240" height= "120" src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/bt_NRC.gif">
 </p>
-
+ :arrow_forward: [Here] (https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html)
 
 
 
@@ -19,7 +20,8 @@
 | The Czech Poslaneck     | 1993/01-2016/06 | psp_MPs_Party_Year  |`FINN`, `NRC`, `Bing`        |       1993      |
 | The Finnish Eduskunta   | 1991/04-2015/12 | ed_MPs_Party_Year   |`FINN`, `NRC`, `Bing`        |       2009      |
 | The Swedish Riksdagen   | 1990/10-2015/12 | rd_MPs_Party_Year   |`FINN`, `NRC`, `Bing`        |       1992      |
-- To include years that are greater than 4/6 months of data.
+-
+To include years that are greater than 4/6 months of data.
 - Start date of `UK`, `Spanish`, `Dutch`data are less than  2/3 (8 months), so I exclude the first year of these data. 
 
 
