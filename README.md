@@ -24,19 +24,19 @@
 
 ## Lexicon Based Sentiment Scores
 
-##### AFINN 
+#### AFINN 
 
 The AFINN lexicon is a list of English terms manually rated for valence with an integer between `-5 (negative)` and `+5 (positive)` by Finn Årup Nielsen between 2009 and 2011 [:link:](https://github.com/fnielsen/afinn). 
 
-#####  NRC    
+####  NRC    
 
 The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and `two sentiments` (negative and positive). The annotations were manually done by crowdsourcing [:link:](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm).
 
-#####  Bing
+####  Bing
 
 A list of English `positive` and `negative` opinion words or sentiment words (around 6800 words). This list was compiled over many years starting from our first paper (Hu and Liu, KDD-2004) [:link:](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html). 
 
-#####  LIWC
+####  LIWC
 
 Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness`  [[paper](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf)].
 
