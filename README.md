@@ -12,7 +12,7 @@
 ## Overview of the Speech Dataset
 
 | Countries               |     Periods     |     Object Names    |          Dict Type          | Data Start-Date |    
-|-------------------------|:---------------:|--------------------:|----------------------------:|:---------------:|
+|-------------------------|:---------------:|--------------------:|:---------------------------:|:---------------:|
 | The UK House of Commons | 1988/11-2015/01 | hoc_MPs_Party_Year  |`FINN`, `NRC`, `Bing`,`LIWC` |       1989    	|
 | The Spanish Congresso   | 1989/11-2015/10 | cong_MPs_Party_Year |`FINN`, `NRC`, `Bing`,`LIWC` |       1990      |
 | The German Bundestag    | 1991/03-2013/09 | bt_MPs_Party_Year   |`FINN`, `NRC`, `Bing`,`LIWC` |       1991      |
