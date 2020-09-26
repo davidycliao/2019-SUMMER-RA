@@ -1,8 +1,5 @@
 # Visualizing Parspeech Dataset's Sentiment Using Various Types of Sentiment Dictionaries 
 
-The repository restores scripts for processing parliament speech in multiple python libraries to [ParlSpeech V](https://sites.google.com/site/christianrauh/data-and-resources). ParlSpeech contains full-text vectors of more than 3.9 million plenary speeches from the Czech Republic, Finland, Germany, the Netherlands, Spain, Sweden, and the United Kingdom, covering periods between 22 and 28 years. The accompanying release note provides a more detailed guide to the data. For more information, please read [Rauh et al 2017](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/E4RSP9).
-
-
 <p align="center">
   <img width="400" height= "320" src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/hoc_NRC.gif">
   <img width="400" height= "320"  src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/bt_NRC.gif">
