@@ -7,6 +7,7 @@
 
 :arrow_forward: [Please check here](https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html)
 
+<br/>
 
 
 ## Overview of the Speech Dataset
@@ -20,6 +21,8 @@
 | The Czech Poslaneck     | 1993/01-2016/06 |`FINN`, `NRC`, `Bing`        |       1993      |
 | The Finnish Eduskunta   | 1991/04-2015/12 |`FINN`, `NRC`, `Bing`        |       2009      |
 | The Swedish Riksdagen   | 1990/10-2015/12 |`FINN`, `NRC`, `Bing`        |       1992      |
+
+<br/>
 
 
 ## Lexicon Based Sentiment Scores
