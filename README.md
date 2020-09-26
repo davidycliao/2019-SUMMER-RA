@@ -1,15 +1,15 @@
-# Visualization and Parspeech Sentiment Using Various Type of Dictionary Based Sentiment Analysis 
+# Visualizing Parspeech Dataset's Sentiment Using Various Types of Dictionaries
 
 
 <p align="center">
   <img width="240" height= "120" src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/hoc_NRC.gif">
   <img width="240" height= "120" src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/bt_NRC.gif">
 </p>
- :arrow_forward: [Here] (https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html)
+ :arrow_forward: [Here](https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html)
 
 
 
-## Check the Speech Dataset
+## Overview of the Speech Dataset
 
 | Countries               |     Periods     |     Object Names    |          Dict Type          | Data Start-Date |    
 |-------------------------|:---------------:|--------------------:|----------------------------:|:---------------:|
@@ -27,6 +27,7 @@ To include years that are greater than 4/6 months of data.
 
 
 ## Lexicon Based Sentiment Scores
+
 - AFINN 
 The AFINN lexicon is a list of English terms manually rated for valence with an integer between `-5 (negative)` and `+5 (positive)` by Finn Årup Nielsen between 2009 and 2011 [:link:](https://github.com/fnielsen/afinn). 
 
