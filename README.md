@@ -46,4 +46,4 @@ Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`a
 
 ## Acknowledge 
 
-- We acknowledge the use of the High Performance Computing Facility, [CERES Cluster](https://hpc.essex.ac.uk/), and its associated support services at the University of Essex in the completion of my research projects.
+We acknowledge the use of the High Performance Computing Facility, [CERES Cluster](https://hpc.essex.ac.uk/), and its associated support services at the University of Essex in the completion of my research projects.
