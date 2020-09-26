@@ -1,0 +1,573 @@
+---
+title: "Visualization and Parspeech Sentiment using LIWC, FINN, Bing and NRC"
+author: David Liao & Royce Carroll
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+
+
+## I. Dataset Description
+|        Countries        |     Object Names    |          Dict Type          |    Start-Date   |       Majority Parties        |       Minority Parties        |         
+|-------------------------|:--------------------|-----------------------------|:---------------:|-------------------------------|-------------------------------|
+| The UK House of Commons | hoc_MPs_Party_Year  | FINN, NRC, Bing, LIWC       |       1989    	| `Lab`,`Con`,`LibDem`          | `SDP`, `SNP`, `DUP`           |
+| The Spanish Congresso   | cong_MPs_Party_Year | FINN, NRC, Bing, LIWC       |       1990      | `PP`,`PSOE`,`IU`              | `ERC`, `CiU`, `UPyD`          |
+| The German Bundestag    | bt_MPs_Party_Year   | FINN, NRC, Bing, LIWC       |       1991      | `CDU/CSU`,`SPD`,`FDP`         | `GRUENE`, `independent`       |
+| The Dutch Tweede Kamer  | tk_MPs_Party_Year   | FINN, NRC, Bing, LIWC       |       1995      | `VVD`,`PVV`, `CDA`            | `PVV`,`GL`, `D66`             |
+| The Czech Poslanecká    | psp_MPs_Party_Year  | FINN, NRC, Bing             |       1993      | `??SSD`,`ODS`,`KS??M`           | `TOP 09 a Starostové`, `??SSD` |       
+| The Finnish Eduskunta   | ed_MPs_Party_Year   | FINN, NRC, Bing             |       2009      | `SDP`,`Kok`, `Kesk`           | `RKP`, `KD`                   |      
+| The Swedish Riksdagen   | rd_MPs_Party_Year   | FINN, NRC, Bing             |       1992      | `S`, `M`                      | `MP`, `L`, `KD`               |   
+
+```{r I set up functions & purring the dataset, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+## Step1: installing multiple packages
+sapply(c("ggpubr", "tidyverse", "readxl", "RColorBrewer", "parallel", "knitr", "DT"), require, character.only = TRUE)
+
+# option = readline(prompt="opt for \"Set1\": ")  #  ColorBrewer suggestion : "Set1", "Set2", "Set3" , "BrBG", "Paired" 
+option = "Set3" #  ColorBrewer suggestion : "Set1", "Set2", "Set3" , "BrBG", "Paired" 
+options(scipen=999) 
+
+## Step2: read dataset
+setwd("~/Box/myBox/Speech Comparison/Sentiments")
+bt_MPs <- read_csv("bt_MPs.csv")
+cong_MPs <- read_csv("cong_MPs.csv")
+ed_MPs <- read_csv("ed_MPs.csv")
+hoc_MPs <- read_csv("hoc_MPs.csv")
+psp_MPs <- read_csv("psp_MPs.csv")
+rd_MPs <- read_csv("rd_MPs.csv")
+tk_MPs <- read_csv("tk_MPs.csv")
+
+## Step3: custom functions 
+recodeData.by_party = function(i) { 
+  # function recode for no liwc dictionary
+  i %>% 
+  filter(!party == "other") %>%
+  mutate(Year = lubridate::year(date)) %>%
+  group_by(party, Year) %>%
+  summarise(Total_Sum = sum(terms),
+            NegativeScores_party.FINN = sum(NegativeScores.FINN),
+            PositiveScores_party.FINN = sum(PositiveScores.FINN),
+            NegativeScores_party_mean.FINN = sum(NegativeScores.FINN)/Total_Sum,
+            PositiveScores_party_mean.FINN = sum(PositiveScores.FINN)/Total_Sum,
+            NegativeScores_party.Bing = sum(NegativeScores.Bing),
+            PositiveScores_party.Bing = sum(PositiveScores.Bing),
+            NegativeScores_party_mean.Bing = sum(NegativeScores.Bing)/Total_Sum,
+            PositiveScores_party_mean.Bing = sum(PositiveScores.Bing)/Total_Sum,
+            NegativeScores_party.Bing = sum(NegativeScores.Bing),
+            PositiveScores_party.Bing = sum(PositiveScores.Bing),
+            NegativeScores_party_mean.Bing = sum(NegativeScores.Bing)/Total_Sum,
+            PositiveScores_party_mean.Bing = sum(PositiveScores.Bing)/Total_Sum,
+            NegativeScores_party.NRC = sum(NegativeScores.NRC),
+            PositiveScores_party.NRC = sum(PositiveScores.NRC),
+            NegativeScores_party_mean.NRC = sum(NegativeScores.NRC)/Total_Sum,
+            PositiveScores_party_mean.NRC = sum(PositiveScores.NRC)/Total_Sum) 
+  }
+
+
+recodeData.by_party.liwc = function(i) {
+  # function recode for having liwc dictionary
+  i %>% 
+  filter(!party == "other") %>%
+  mutate(Year = lubridate::year(date)) %>%
+  group_by(party, Year) %>%
+  summarise(Total_Sum = sum(terms),
+            NegativeScores_party.FINN = sum(NegativeScores.FINN),
+            PositiveScores_party.FINN = sum(PositiveScores.FINN),
+            NegativeScores_party_mean.FINN = sum(NegativeScores.FINN)/Total_Sum,
+            PositiveScores_party_mean.FINN = sum(PositiveScores.FINN)/Total_Sum,
+            NegativeScores_party.Bing = sum(NegativeScores.Bing),
+            PositiveScores_party.Bing = sum(PositiveScores.Bing),
+            NegativeScores_party_mean.Bing = sum(NegativeScores.Bing)/Total_Sum,
+            PositiveScores_party_mean.Bing = sum(PositiveScores.Bing)/Total_Sum,
+            NegativeScores_party.Bing = sum(NegativeScores.Bing),
+            PositiveScores_party.Bing = sum(PositiveScores.Bing),
+            NegativeScores_party_mean.Bing = sum(NegativeScores.Bing)/Total_Sum,
+            PositiveScores_party_mean.Bing = sum(PositiveScores.Bing)/Total_Sum,
+            NegativeScores_party.NRC = sum(NegativeScores.NRC),
+            PositiveScores_party.NRC = sum(PositiveScores.NRC),
+            NegativeScores_party_mean.NRC = sum(NegativeScores.NRC)/Total_Sum,
+            PositiveScores_party_mean.NRC = sum(PositiveScores.NRC)/Total_Sum,
+            NegativeScores_party.LIWC = sum(negemo.LIWC),
+            PositiveScores_party.LIWC = sum(posemo.LIWC),
+            AffectScores.LIWC = sum(affect.LIWC),
+            AnxScores.LIWC = sum(anx.LIWC),
+            AngerScores.LIWC = sum(anger.LIWC),
+            SadScores.LIWC = sum(sad.LIWC),
+            NegativeScores_party_mean.LIWC = sum(negemo.LIWC)/Total_Sum,
+            PositiveScores_party_mean.LIWC = sum(posemo.LIWC)/Total_Sum,
+            AffectScores_party_mean.LIWC = sum(affect.LIWC)/Total_Sum,
+            AnxScores_party_mean.LIWC = sum(anx.LIWC)/Total_Sum,
+            AngerScores_party_mean.LIWC = sum(anger.LIWC)/Total_Sum,
+            SadScores_party_mean.LIWC = sum(sad.LIWC)/Total_Sum) }
+```
+
+### The UK House of Commons 
+```{r UK, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+hoc_MPs_Party_Year <- recodeData.by_party.liwc(hoc_MPs) %>% 
+  filter(!Year == 1988 & !party == "other") %>%
+  as.data.frame()
+
+datatable(hoc_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+### The Spanish Congresso
+```{r Spane, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+cong_MPs_Party_Year <- recodeData.by_party.liwc(cong_MPs) %>% 
+  filter(!Year == 1989 & !party == "other")
+
+datatable(cong_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+
+```
+
+### The German Bundestag
+```{r Germany, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+bt_MPs_Party_Year <- recodeData.by_party.liwc(bt_MPs) %>%
+  as.data.frame()
+
+datatable(bt_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+### The Dutch Tweede Kamer
+```{r Netherland, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+tk_MPs_Party_Year <- recodeData.by_party.liwc(tk_MPs) %>% 
+  filter(!Year == 1994 & !party == "other")
+datatable(tk_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+### The Czech Poslaneck
+```{r Czech, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+psp_MPs_Party_Year <- recodeData.by_party(psp_MPs) %>%  
+  filter(!party == "other")
+datatable(psp_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+### The Finnish Eduskunta
+```{r Finland, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ed_MPs_Party_Year <- recodeData.by_party(ed_MPs) %>% 
+  filter(!party == "other")
+
+datatable(ed_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+
+### The Swedish Riksdagen
+```{r Sweden, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+rd_MPs_Party_Year <- recodeData.by_party(rd_MPs) %>%  # Sweden
+  filter(!party == "other")
+
+datatable(rd_MPs_Party_Year, rownames = FALSE, filter="top",
+          options = list(pageLength = 8, scrollX=T, initComplete = JS("function(settings, json) {","$('body').css({'font-family': 'Trebuchet MS'});","}")))
+```
+
+
+------
+
+## II. The Number of Terms
+```{r II set up functions & purring the dataset, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+## Step 1: Set up functions
+linechart_fun.COUNT.FULL <- function(x, y) {
+  # Exploring the number of terms in each speech by comparing full parties 
+  ggplot(dat, aes(x = .data[[x]], y = .data[[y]]), group = party) +
+    geom_line(aes(colour = party), size=2, show.legend = FALSE, alpha=0.7) + 
+    geom_point(aes(shape = party), size=3, alpha =1) +
+    scale_fill_manual(values = getPalette(length(summary(as.factor(unique(dat$party))))))+ #
+    scale_shape_discrete(name = "Party", breaks = c(unique(dat$party))) +  
+    scale_shape_manual(values = c(seq(1:length(summary(as.factor(unique(dat$party)))))))+
+    scale_x_continuous(breaks = seq(0, max(dat$Year), 1))+
+    theme_bw() +
+    theme(legend.position = "bottom",   
+          # here dealing with legend  // legend.position=c(.06, .3), legend.justification = c(0,0) 
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size=10)) +
+    theme(plot.subtitle = element_text(size=10, color="black", family = "Trebuchet MS"),
+          axis.text = element_text(size=5), axis.title=element_text(size = 10,face="bold"),
+          axis.text.x = element_text(angle = 60, hjust = 1, size = 20 , family="Trebuchet MS"),
+          axis.text.y = element_text(family = "Trebuchet MS", size = 10),
+          plot.title =  element_text(family = "Trebuchet MS", size = 10),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey60", linetype = "blank"))+
+    xlab(paste(str_sub(y, 1, 8), "Sentiment Scores", "/", str_replace(str_sub(y, -4),pattern = ".NRC", replacement = "NRC"))) +
+    ylab(NULL) +
+    labs(subtitle = "Unit: The Number of Terms")
+  }
+
+
+linechart_fun.COUNT.FULL.Facet <- function(x, y) {
+  # Faceting the number of terms in each speech by comparing full parties 
+  ggplot(dat, aes(x = .data[[x]], y = .data[[y]]), group = party) +
+    geom_line(aes(colour = party), size = 1, show.legend = FALSE, alpha = 0.7) + 
+    geom_point(aes(shape = party), size = 1.5, alpha = 1) +
+    scale_fill_manual(values = getPalette(length(summary(as.factor(unique(dat$party))))))+ #
+    scale_shape_discrete(name = "Party", breaks = c(unique(dat$party))) +  
+    scale_shape_manual(values = c(seq(1:length(summary(as.factor(unique(dat$party)))))))+
+    scale_x_continuous(breaks = seq(0, max(dat$Year), 1))+
+    theme_bw() +
+    theme(legend.position = "bottom",
+          # here dealing with legend  // legend.position=c(.06, .3), legend.justification = c(0,0) 
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size=5))+
+    theme(plot.subtitle = element_text(size = 5, family = "Trebuchet MS"),
+          axis.text=element_text(size=5), 
+          axis.title=element_text(size = 5, face="bold"), 
+          strip.text = element_text(size= 5),
+          axis.text.x = element_text(angle = 60, hjust = 1, size = 8, family="Trebuchet MS"),
+          axis.text.y = element_text(family = "Trebuchet MS", size = 6),
+          plot.title =  element_text(family = "Trebuchet MS", size = 4),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey60", linetype = "blank"))+
+    xlab(paste(str_sub(y, 1, 8), "Sentiment Scores", "/", str_replace(str_sub(y, -4),pattern = ".NRC", replacement = "NRC"))) +
+    ylab(NULL) +
+    labs(subtitle = "Unit: The Number of Terms") +
+    facet_wrap(~ party)
+}
+
+## Step 2: Purring the dataset
+dat <- hoc_MPs_Party_Year #UK
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+hoc_MPs_Party_Year.COUNT <- map(names(hoc_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(hoc_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+hoc_MPs_Party_Year.COUNT.Facet <- map(names(hoc_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(hoc_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+dat <- cong_MPs_Party_Year #Spain
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+cong_MPs_Party_Year.COUNT <-map(names(cong_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(cong_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+cong_MPs_Party_Year.COUNT.Facet <-map(names(cong_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(cong_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+dat <- bt_MPs_Party_Year #Germany
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+bt_MPs_Party_Year.COUNT <-map(names(bt_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)], 
+                              ~map(names(bt_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+bt_MPs_Party_Year.COUNT.Facet <-map(names(bt_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)], 
+                              ~map(names(bt_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+dat <- tk_MPs_Party_Year #Dutch 
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+tk_MPs_Party_Year.COUNT <-map(names(tk_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                              ~map(names(tk_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+tk_MPs_Party_Year.COUNT.Facet <-map(names(tk_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                              ~map(names(tk_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+dat <- psp_MPs_Party_Year #Czech
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+psp_MPs_Party_Year.COUNT <-map(names(psp_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                               ~map(names(psp_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+psp_MPs_Party_Year.COUNT.Facet <-map(names(psp_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                               ~map(names(psp_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+
+dat <- ed_MPs_Party_Year #Finland
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+ed_MPs_Party_Year.COUNT <-map(names(ed_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(ed_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+ed_MPs_Party_Year.COUNT.Facet <-map(names(ed_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(ed_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+
+dat <- rd_MPs_Party_Year #Sweden
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+rd_MPs_Party_Year.COUNT <-map(names(rd_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(rd_MPs_Party_Year)[2], linechart_fun.COUNT.FULL, y = .x))
+rd_MPs_Party_Year.COUNT.Facet <-map(names(rd_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(rd_MPs_Party_Year)[2], linechart_fun.COUNT.FULL.Facet, y = .x))
+```
+
+
+------
+
+## 1. Full Parties
+## 1.1.1 The UK House of Commons 
+```{r II 1.1.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(hoc_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+
+## 1.1.2 The UK House of Commons / Facet
+```{r II 1.1.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(hoc_MPs_Party_Year.COUNT.Facet[[i]][[1]])}
+```
+
+## 1.2.1 The Spanish Congresso 
+```{r II 1.2.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(cong_MPs_Party_Year.COUNT[[i]][[1]])
+}
+```
+## 1.2.2 The Spanish Congresso / Facet
+```{r II 1.2.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(cong_MPs_Party_Year.COUNT.Facet[[i]][[1]])
+}
+```
+
+## 1.3.1 The German Bundestag
+```{r II 1.3.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+## 1.3.2 The German Bundestag / Facet
+```{r II 1.3.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT.Facet[[i]][[1]])}
+```
+
+## 1.4.1 The Dutch Tweede Kamer 
+```{r II 1.4.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(tk_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+## 1.4.2 The Dutch Tweede Kamer / Facet
+```{r II 1.4.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT.Facet[[i]][[1]])}
+```
+
+## 1.5.1 The Czech Poslanecká  
+```{r II 1.5.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:6){
+  print(psp_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+## 1.5.2 The Czech Poslanecká / Facet
+```{r II 1.5.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT.Facet[[i]][[1]])
+}
+```
+
+## 1.6.1 The Finnish Eduskunta 
+```{r II 1.6.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:6){
+  print(ed_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+## 1.6.2 The Finnish Eduskunta / Facet
+```{r II 1.6.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT.Facet[[i]][[1]])}
+```
+
+## 1.7.1 The Swedish Riksdagen 
+```{r II 1.7.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:6){
+  print(rd_MPs_Party_Year.COUNT[[i]][[1]])}
+```
+## 1.7.2 The Swedish Riksdagen / Facet
+```{r II 1.7.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+for (i in 1:12){
+  print(bt_MPs_Party_Year.COUNT.Facet[[i]][[1]])}
+```
+
+------
+
+
+## 2. Majority Parties
+
+| Countries               |       Majority Parties        |      
+|-------------------------|-------------------------------|
+| The UK House of Commons | `Lab`,`Con`,`LibDem`          |
+| The Spanish Congresso   | `PP`,`PSOE`,`IU`              |
+| The German Bundestag    | `CDU/CSU`,`SPD`,`FDP`         | 
+| The Dutch Tweede Kamer  | `VVD`,`PVV`, `CDA`            | 
+| The Czech Poslanecká    | `??SSD`,`ODS`,`KS??M`           |  
+| The Finnish Eduskunta   | `SDP`,`Kok`, `Kesk`           |     
+| The Swedish Riksdagen   | `S`, `M`                      |    
+
+
+
+```{r majority parties count recode, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# Plot function 
+linechart_fun.COUNT <- function(x, y) {
+  # Exploring the number of terms in each speech by comparing full parties 
+  ggplot(dat, aes(x = .data[[x]], y = .data[[y]]), group= party) +
+    geom_line(aes(colour = party), size=1, show.legend = TRUE, alpha = 1) + 
+    geom_point(aes(shape = party), size=1.5, alpha=0.7) +
+    scale_x_continuous(breaks = seq(0, max(dat$Year), 1))+
+    theme_bw() +
+    theme(legend.position = "bottom",   
+          # here dealing with legend  // legend.position=c(.06, .3), legend.justification = c(0,0) 
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size=5)) +
+    theme(plot.subtitle = element_text(size=5, color="black", family = "Trebuchet MS"),
+          axis.text = element_text(size=5), axis.title=element_text(size = 5,face="bold"),
+          axis.text.x = element_text(angle = 60, hjust = 1, size = 10 , family="Trebuchet MS"),
+          axis.text.y = element_text(family = "Trebuchet MS", size = 5),
+          plot.title =  element_text(family = "Trebuchet MS", size = 5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey60", linetype = "blank")) +
+    xlab(paste(str_sub(y, 1, 8), "Sentiment Scores", "/", str_replace(str_sub(y, -4),pattern = ".NRC", replacement = "NRC"))) +
+    ylab(NULL) +
+    labs(subtitle = "Unit: The Number of Terms")}
+
+
+
+# Making a function for uniting the graphs  
+ggarrage_show <- function(i){
+  if (i %in% seq(1, 6, by=1)){
+    # 1 Negative Scores / FINN 
+    # 2 Negative Scores / Bing 
+    # 3 Negative Scores / NRC
+    # 4 Positive Scores / FINN 
+    # 5 Positive Scores / Bing 
+    # 6 Positive Scores / NRC
+    ggarrange(hoc_MPs_Party_Year.COUNT[[i]][[1]], cong_MPs_Party_Year.COUNT[[i]][[1]], bt_MPs_Party_Year.COUNT[[i]][[1]], tk_MPs_Party_Year.COUNT[[i]][[1]],
+              psp_MPs_Party_Year.COUNT[[i]][[1]], ed_MPs_Party_Year.COUNT[[i]][[1]], rd_MPs_Party_Year.COUNT[[i]][[1]],
+              ncol = 4, nrow = 2, vjust = 4, hjust = -0.38,
+              labels = c("UK House of Commons", "Spanish Congresso" , "German Bundestag ","Dutch Tweede Kamer","Czech Poslanecká", "Finnish Eduskunta", "Swedish Riksdagen"),
+              common.legend = FALSE, font.label = list(size = 20, color = "black", face = "bold", family = "Trebuchet MS"),legend = "bottom")}
+  else if (i %in% seq(7, 12, by=1)){ 
+    # 7 LIWC Emotions Scores / Positve
+    # 8 LIWC Emotions Scores / Negative
+    # 9 LIWC Emotions Scores / Affect
+    # 10 LIWC Emotions Scores / Anx
+    # 11 LIWC Emotions Scores / Anger
+    # 12 LIWC Emotions Scores / Sad        
+    ggarrange(hoc_MPs_Party_Year.COUNT[[i]][[1]],cong_MPs_Party_Year.COUNT[[i]][[1]],bt_MPs_Party_Year.COUNT[[i]][[1]],tk_MPs_Party_Year.COUNT[[i]][[1]],
+              ncol = 4, nrow = 2, vjust = 4, hjust = -0.38,
+              labels = c("UK House of Commons", "Spanish Congresso" , "German Bundestag ","Dutch Tweede Kamer"),
+              common.legend = FALSE, font.label = list(size = 20, color = "black", face = "bold", family = "Trebuchet MS"),legend = "bottom")} 
+  else {print ("You should type the number between 1 to 12")}
+}
+
+
+# Purring majority party dataset
+dat <- subset(hoc_MPs_Party_Year, party %in% c("Lab","Con","LibDem")) 
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+hoc_MPs_Party_Year.COUNT <- map(names(hoc_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(hoc_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+dat <- subset(cong_MPs_Party_Year, party %in% c("PP","PSOE","IU")) 
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+cong_MPs_Party_Year.COUNT <-map(names(cong_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                                ~map(names(cong_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+
+dat <- subset(bt_MPs_Party_Year, party %in% c("CDU/CSU","SPD","FDP")) 
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+bt_MPs_Party_Year.COUNT <-map(names(bt_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)], 
+                              ~map(names(bt_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+
+dat <- subset(tk_MPs_Party_Year, party %in% c("VVD","PVV", "CDA")) # just pick up three parties
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+tk_MPs_Party_Year.COUNT <-map(names(tk_MPs_Party_Year)[c(4,8,12, 5,9,13,16, 17, 18, 19, 20, 21)],
+                              ~map(names(tk_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+
+dat <- subset(psp_MPs_Party_Year, party %in% c("??SSD","ODS","KS??M")) # just pick up three parties
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+psp_MPs_Party_Year.COUNT <-map(names(psp_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                               ~map(names(psp_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+
+dat <- subset(ed_MPs_Party_Year, party %in% c("SDP","Kok", "Kesk")) # just pick up three parties
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+ed_MPs_Party_Year.COUNT <-map(names(ed_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(ed_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+
+dat <- subset(rd_MPs_Party_Year, party %in% c("S","M","C")) # just pick up three parties
+colourCount <- length(summary(as.factor(unique(dat$party))))
+getPalette <-  colorRampPalette(brewer.pal(colourCount, option))
+rd_MPs_Party_Year.COUNT <-map(names(rd_MPs_Party_Year)[c(4,8,12, 5,9,13)],
+                              ~map(names(rd_MPs_Party_Year)[2], linechart_fun.COUNT, y = .x))
+```
+
+## 2.1 The UK House of Commons 
+## 2.1.1 Negative Scores / FINN 
+```{r II 2.1.1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+ggarrage_show(1)
+```
+
+
+## 2.1.2 Negative Scores / Bing 
+
+```{r II 2.1.2, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+ggarrage_show(2)
+```
+
+## 2.1.3 Negative Scores / NRC
+
+```{r II 2.1.3, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(3)
+```
+
+## 2.1.4 Positive Scores / FINN
+
+```{r II 2.1.4, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(4)
+```
+
+## 2.1.5 Positive Scores / Bing
+
+```{r II 2.1.5, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(5)
+```
+
+## 2.1.6 Positive Scores / NRC
+```{r II 2.1.6, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(6)
+```
+
+## 2.1.7 LIWC Emotions Scores / Positve
+```{r II 2.1.7, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(7)
+```
+
+## 2.1.8 LIWC Emotions Scores / Negative
+```{r II 2.1.8, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(8)
+```
+
+
+## 2.1.9 LIWC Emotions Scores / Affect
+```{r II 2.1.9, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(9)
+```
+
+## 2.1.10 LIWC Emotions Scores / Anx
+```{r II 2.1.10, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(10)
+```
+
+## 2.1.11 LIWC Emotions Scores / Anger
+```{r II 2.1.11, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(11)
+```
+    
+## 2.1.12 LIWC Emotions Scores / Sad 
+```{r II 2.1.12, fig.height=7, fig.width=15, message=FALSE, warning=FALSE}
+ggarrage_show(12)
+```
+
+
+
