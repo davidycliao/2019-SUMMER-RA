@@ -33,7 +33,7 @@
 
 **Bing**   <br /> A list of English `positive` and `negative` opinion words or sentiment words (around 6800 words). [:link:](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html) <br />
 
-**LIWC**  <br /> Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness`.  [[paper](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf)] <br />
+**LIWC**  <br /> Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness`.  [:link:](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf) <br />
 
 
 ## Acknowledge 
