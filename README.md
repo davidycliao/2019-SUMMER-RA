@@ -11,15 +11,15 @@
 
 ## Overview of the Speech Dataset
 
-| Countries               |     Periods     |     Object Names    |          Dict Type          | Data Start-Date |    
-|-------------------------|:---------------:|--------------------:|:---------------------------:|:---------------:|
-| The UK House of Commons | 1988/11-2015/01 | hoc_MPs_Party_Year  |`FINN`, `NRC`, `Bing`,`LIWC` |       1989    	|
-| The Spanish Congresso   | 1989/11-2015/10 | cong_MPs_Party_Year |`FINN`, `NRC`, `Bing`,`LIWC` |       1990      |
-| The German Bundestag    | 1991/03-2013/09 | bt_MPs_Party_Year   |`FINN`, `NRC`, `Bing`,`LIWC` |       1991      |
-| The Dutch Tweede Kamer  | 1994/12-2015/11 | tk_MPs_Party_Year   |`FINN`, `NRC`, `Bing`,`LIWC` |       1995      |
-| The Czech Poslaneck     | 1993/01-2016/06 | psp_MPs_Party_Year  |`FINN`, `NRC`, `Bing`        |       1993      |
-| The Finnish Eduskunta   | 1991/04-2015/12 | ed_MPs_Party_Year   |`FINN`, `NRC`, `Bing`        |       2009      |
-| The Swedish Riksdagen   | 1990/10-2015/12 | rd_MPs_Party_Year   |`FINN`, `NRC`, `Bing`        |       1992      |
+| Countries               |     Periods     |         Dict Type           | Data Start-Date |    
+|-------------------------|:---------------:|:---------------------------:|:---------------:|
+| The UK House of Commons | 1988/11-2015/01 |`FINN`, `NRC`, `Bing`,`LIWC` |       1989    	|
+| The Spanish Congresso   | 1989/11-2015/10 |`FINN`, `NRC`, `Bing`,`LIWC` |       1990      |
+| The German Bundestag    | 1991/03-2013/09 |`FINN`, `NRC`, `Bing`,`LIWC` |       1991      |
+| The Dutch Tweede Kamer  | 1994/12-2015/11 |`FINN`, `NRC`, `Bing`,`LIWC` |       1995      |
+| The Czech Poslaneck     | 1993/01-2016/06 |`FINN`, `NRC`, `Bing`        |       1993      |
+| The Finnish Eduskunta   | 1991/04-2015/12 |`FINN`, `NRC`, `Bing`        |       2009      |
+| The Swedish Riksdagen   | 1990/10-2015/12 |`FINN`, `NRC`, `Bing`        |       1992      |
 
 
 ## Lexicon Based Sentiment Scores
