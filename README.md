@@ -38,3 +38,8 @@ A list of English `positive` and `negative` opinion words or sentiment words (ar
 
 - LIWC
 Variables include `affect`, `positive emotion`, `negative emotion`, `anxiety`,`anger` and `sadness` [:paper:](https://repositories.lib.utexas.edu/bitstream/handle/2152/31333/LIWC2015_LanguageManual.pdf).
+
+
+## Acknowledge 
+
+- We acknowledge the use of the High Performance Computing Facility, [CERES Cluster](https://hpc.essex.ac.uk/), and its associated support services at the University of Essex in the completion of my research projects.
