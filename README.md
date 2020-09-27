@@ -11,6 +11,7 @@
 
 
 ## Overview of the Speech Dataset
+___ParlSpeech__ contains more than 3.9 million entire speeches in the key legislative chambers of the Czech Republic, Finland, Germany, the Netherlands, Spain, Sweden, and the United Kingdom. Speeches are annotated with date, speaker and party and collected by [Rauh, De Wilde and Schwalbach (2017)](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/E4RSP9). 
 
 | Countries               |     Periods     |         Dict Type           | Data Start-Date |    
 |-------------------------|:---------------:|:---------------------------:|:---------------:|
