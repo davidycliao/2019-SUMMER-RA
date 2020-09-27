@@ -5,7 +5,7 @@
   <img width="400" height= "320"  src="https://raw.githack.com/yl17124/yl17124.github.io/master/images/bt_NRC.gif">
 </p>
 
-:arrow_forward: [Visualization & Data Analytics Showcase](https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html)
+[Visualization & Data Analytics Showcase](https://raw.githack.com/yl17124/2019-SUMMER-RA/master/ParspeechV1.html) :orange_book:
 
 <br/>
 
