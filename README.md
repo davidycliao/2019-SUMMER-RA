@@ -1,8 +1,8 @@
 # Visualizing Parspeech Dataset's Sentiment Using Various Types of Sentiment Dictionaries 
 
 <p align="center">
-  <img width="400" height= "320" src="https://raw.githack.com/davidycliao/davidycliao.github.io/master/images/hoc_NRC.gif">
-  <img width="400" height= "320"  src="https://raw.githack.com/davidycliao/davidycliao.github.io/master/images/bt_NRC.gif">
+  <img width="400" height= "320" src="https://github.com/davidycliao/figures/blob/master/uk_top_animate.gif">
+  <img width="440" height= "335"  src="https://raw.githack.com/davidycliao/figures/master/hoc_NRC.gif">
 </p>
 
 [Visualization & Data Curation](https://raw.githack.com/davidycliao/2019-SUMMER-RA/master/ParspeechV1.html) :orange_book:
