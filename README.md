@@ -1,17 +1,16 @@
-# Visualizing Parspeech Dataset's Sentiment Using Various Types of Sentiment Dictionaries ([Data Curation](https://raw.githack.com/davidycliao/2019-SUMMER-RA/master/ParspeechV1.html): 🔗)
+# Visualizing Parspeech Dataset's Sentiment Using Various Types of Sentiment Dictionaries 
 
 
 <p align="center">
-  <img width="400" height= "320" src="https://github.com/davidycliao/figures/blob/master/uk_top_animate.gif">
-  <img width="440" height= "320"  src="https://raw.githack.com/davidycliao/figures/master/hoc_NRC.gif">
+  <img width="350" height= "305" src="https://github.com/davidycliao/figures/blob/master/uk_top_animate.gif">
+  <img width="400" height= "320"  src="https://raw.githack.com/davidycliao/figures/master/hoc_NRC.gif">
 </p>
 
-[Visualization & Data Curation](https://raw.githack.com/davidycliao/2019-SUMMER-RA/master/ParspeechV1.html) :orange_book:
 
 <br/>
 
 
-## Overview of the Speech Dataset
+## Overview of the Speech Dataset ([Data Curation](https://raw.githack.com/davidycliao/2019-SUMMER-RA/master/ParspeechV1.html): 🔗)
 
 ___ParlSpeech___ contains more than 3.9 million entire speeches in the key legislative chambers of the Czech Republic, Finland, Germany, the Netherlands, Spain, Sweden, and the United Kingdom. Speeches are annotated with date, speaker and party and collected by [Rauh, De Wilde and Schwalbach (2017)](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/E4RSP9). 
 
